@@ -4,19 +4,22 @@ if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 } else if (version_compare(PHP_VERSION, '5.5.0', '<')) {
     // if you are using PHP 5.3 or PHP 5.4 you have to include the password_api_compatibility_library.php
     // (this library adds the PHP 5.5 password hashing functions to older versions of PHP)
-    require_once("libraries/password_compatibility_library.php");
+    require_once("classes/password_compatibility_library.php");
 }
 require_once('classes/db_config.php');
 require_once('classes/Login.php');
 $login = new Login();
+//if($_POST) $login->dologinWithPostData();
 ?>
 <!DOCTYPE html>
 <html class="no-js">
 <head>
     <meta charset="utf-8">
-    <title>SuperAdmin</title>
+    <title>TuzobusAdmin</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+
+    <link rel="shortcut icon" href="favicon.ico" />
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
@@ -30,17 +33,30 @@ $login = new Login();
 <div class="container">
     <form class="form-signin" method="post">
 
-        <h2 class="form-signin-heading">Iniciar Sesión</h2>
-
+        <h2 class="form-signin-heading"><img src="favicon.png"> Iniciar Sesión</h2>
+    <?php if(count($login->errors)>0): ?>
+        <div class="alert alert-block">
+            <ul>
+                <?php foreach($login->errors as $e): ?><li><?=$e;?></li><?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if(count($login->messages)>0): ?>
+        <div class="alert alert-success alert-block">
+            <ul>
+                <?php foreach($login->messages as $m): ?> <li><?=$m;?></li><?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
         <div class="input-prepend">
             <span class="add-on"><i class="icon-large icon-envelope"></i></span>
-            <input class="span3" type="text" name="username" placeholder="Usuario">
+            <input class="span3" type="text" name="user_name" placeholder="Usuario">
         </div>
         <div class="input-prepend">
             <span class="add-on"><i class="icon-large icon-key"></i></span>
-            <input class="span3" type="password" name="password" placeholder="Contraseña">
+            <input class="span3" type="password" name="user_password" placeholder="Contraseña">
         </div>
-        <button class="btn btn-large btn-primary" type="submit" name="submit">Entrar</button>
+        <button class="btn btn-large btn-primary" type="submit" name="login">Entrar</button>
     </form>
 </div>
 <!-- /container -->
@@ -92,7 +108,7 @@ $login = new Login();
                         <li><a href="#" class="tip icon logout" data-original-title="Settings"
                                data-placement="bottom"><i class="icon-large icon-cog"></i></a></li>
                         <li class="divider-vertical"></li>
-                        <li><a href="#" class="tip icon logout" data-original-title="Logout" data-placement="bottom"><i
+                        <li><a href="/?logout" class="tip icon logout" data-original-title="Logout" data-placement="bottom"><i
                            class="icon-large icon-off"></i></a></li>
                     </ul>
 

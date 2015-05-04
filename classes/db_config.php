@@ -13,9 +13,9 @@
  */
 
 define("DB_HOST", "localhost");
-define("DB_NAME", "chocomilk85");
-define("DB_USER", "chocomilk85");
-define("DB_PASS", "ch0c0m1lk");
+define("DB_NAME", "tuzobus");
+define("DB_USER", "tuzobus");
+define("DB_PASS", "+uz08u5");
 /*
 define("DB_HOST", "localhost");
 define("DB_NAME", "seedgrou_chocomilk85");
