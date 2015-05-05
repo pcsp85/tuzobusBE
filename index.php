@@ -31,7 +31,7 @@ $login = new Login();
 <body>
 <?php if(!$login->isUserLoggedIn()): ?>
 <div class="container">
-    <form class="form-signin" method="post">
+    <form class="form-signin" method="post" action="./">
 
         <h2 class="form-signin-heading"><img src="favicon.png"> Iniciar Sesión</h2>
     <?php if(count($login->errors)>0): ?>
@@ -70,45 +70,46 @@ $login = new Login();
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <span class="brand">SuperAdmin</span>
+                <span class="brand"><img src="favicon.png"> TuzbusAdmin</span>
 
                 <div class="nav-collapse collapse">
 
                     <ul class="nav">
-                        <li class="active"><a href="#"><i class="icon-home icon-black"></i> Dashboard</a></li>
+                        <li class="active"><a href="./"><i class="icon-home icon-black"></i> Inicio</a></li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                               class="icon-edit icon-black"></i>
-                                Dropdown <b class="caret"></b></a>
+                               class="icon-envelope icon-black"></i>
+                                Invitaciones <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Page One</a></li>
-                                <li><a href="#">Page Two</a></li>
-                                <li><a href="#">Page Three</a></li>
+                                <li><a href="./invitaciones?create">Crear código</a></li>
+                                <li><a href="./invitaciones/">Ver códigos</a></li>
+                                <li><a href="#">Codigos utilizados</a></li>
                             </ul>
                         </li>
 
-                        <li><a href="#"><i class="icon-user icon-black"></i>Sample 1</a></li>
-                        <li><a href="#"><i class="icon-pencil icon-black"></i>Sample 2</a></li>
-                        <li><a href="#"><i class="icon-file icon-black"></i>Sample 3</a></li>
-
-                    </ul>
-
-                    <ul class="nav pull-right settings">
                         <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                               class="icon-picture icon-black"></i>
+                                Anuncios <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Account Settings</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">System Settings</a></li>
+                                <li><a href="#">Crear anuncio</a></li>
+                                <li><a href="#">Ver anuncios</a></li>
+                                <li><a href="#">Estadísticas</a></li>
                             </ul>
                         </li>
+
+                        <li><a href="#"><i class="icon-user icon-black"></i>Usuarios</a></li>
+                        <!--li><a href="#"><i class="icon-pencil icon-black"></i>Sample 2</a></li>
+                        <li><a href="#"><i class="icon-file icon-black"></i>Sample 3</a></li-->
+
                     </ul>
 
                     <ul class="nav pull-right settings">
-                        <li><a href="#" class="tip icon logout" data-original-title="Settings"
+                        <li><a href="#" class="tip icon logout" data-original-title="Camiar contraseña"
                                data-placement="bottom"><i class="icon-large icon-cog"></i></a></li>
                         <li class="divider-vertical"></li>
-                        <li><a href="/?logout" class="tip icon logout" data-original-title="Logout" data-placement="bottom"><i
+                        <li><a href="?logout" class="tip icon logout" data-original-title="Salir" data-placement="bottom"><i
                            class="icon-large icon-off"></i></a></li>
                     </ul>
 
@@ -117,14 +118,14 @@ $login = new Login();
                     </ul>
 
                     <p class="navbar-text pull-right">
-                        Welcome <strong>Admin</strong>
+                        <strong><?=$_SESSION['name'];?></strong>
                     </p>
 
                     <ul class="nav pull-right settings">
                         <li class="divider-vertical"></li>
                     </ul>
 
-                    <div class="pull-right">
+                    <div class="pull-right hide">
                         <form class="form-search form-inline" style="margin:5px 0 0 0;" method="post">
                             <div class="input-append">
                                 <input type="text" name="keyword" class="span2 search-query" placeholder="Search">
@@ -145,10 +146,10 @@ $login = new Login();
         <div class="well sidebar-nav">
             <ul class="nav nav-tabs nav-stacked">
                 <li class="nav-header">Navigation</li>
-                <li class="active"><a href="#">Link One</a></li>
-                <li><a href="#">Link Two</a></li>
-                <li><a href="#">Link Three</a></li>
-                <li><a href="#">Link Four</a></li>
+                <li class="active"><a href="./">Inicio</a></li>
+                <li><a href="./Invitaciones">Invitaciones</a></li>
+                <li><a href="./Anuncios">Anuncios</a></li>
+                <li><a href="./Usuarios">Usuarios</a></li>
             </ul>
         </div>
     </div>
@@ -177,7 +178,7 @@ $login = new Login();
 <hr>
 
 <footer align="center">
-    <p>Copyright &copy; 2013 <strong>Company Name</strong></p>
+    <p>Copyright &copy; 2015 <strong>TuzobusApp</strong></p>
 </footer>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
