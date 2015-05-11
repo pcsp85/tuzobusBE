@@ -8,5 +8,4 @@ Framework:	Boostrap V2.2.1
 Clasess:
 	- Login 
 	- Registration
-	- Tuzobus (Desarrollada)
-
+	- TuzobusApp (Desarrollada)

@@ -15,6 +15,11 @@ body
     border: none;
     width: 230px;
 }
+.navbar .brand{
+    background: url('../favicon.png') no-repeat 1em center;
+    background-size: 1.5em;
+    padding-left: 2.7em
+}
 
 a.nounderline
 {
@@ -58,3 +63,6 @@ a.nounderline
             margin-bottom: 15px;
             padding: 4px 9px;
         }
+#change_password form{
+    margin: 0;
+}

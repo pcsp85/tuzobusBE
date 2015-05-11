@@ -15,7 +15,7 @@ $_POST = array(
 	'user_password_new' => 'tuz08u5',
 	'user_password_repeat' => 'tuz08u5',
 	'user_email' => 'pcsp85@gmail.com',
-	'name' => 'PAblo César Sánchez Porta'
+	'name' => 'Pablo César Sánchez Porta'
 	);
 
 
