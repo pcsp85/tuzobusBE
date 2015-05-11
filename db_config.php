@@ -11,13 +11,12 @@
  * DB_USER: user for your database. the user needs to have rights for SELECT, UPDATE, DELETE and INSERT.
  * DB_PASS: the password of the above user
  */
-define('TuzobusApp', TRUE);
 define("DB_HOST", "localhost");
 define("DB_NAME", "tuzobus");
 define("DB_USER", "tuzobus");
-define("DB_PASS", "+uz08u5");
-/*
-define("DB_HOST", "localhost");
-define("DB_NAME", "seedgrou_chocomilk85");
-define("DB_USER", "seedgrou_pancho");
-define("DB_PASS", "ch0c0m1lk");*/
+define("DB_PASS", "tuz08u5");
+
+/**
+ * TuzobusApp: Variable para validación de scripts correspondientes a la App. 
+ */
+define('TuzobusApp', TRUE);

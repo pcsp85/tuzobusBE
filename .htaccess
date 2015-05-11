@@ -1,4 +1,4 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /tuzobusBe/index.php?params=$1&%{QUERY_STRING} [NC]
+RewriteRule ^(.*)$ /ApptestBe/index.php?params=$1&%{QUERY_STRING} [NC]

@@ -4,6 +4,20 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
     <form class="form-signin" method="post" action="<?=$TB->root;?>">
 
         <h2 class="form-signin-heading"><img src="<?=$TB->root;?>favicon.png"> Iniciar Sesión</h2>
+    <?php if(count($TB->errors)>0): ?>
+        <div class="alert alert-block">
+            <ul>
+                <?php foreach($TB->errors as $e): ?><li><?=$e;?></li><?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <?php if(count($TB->messages)>0): ?>
+        <div class="alert alert-success alert-block">
+            <ul>
+                <?php foreach($TB->messages as $m): ?> <li><?=$m;?></li><?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
     <?php if(count($TB->login->errors)>0): ?>
         <div class="alert alert-block">
             <ul>

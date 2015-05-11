@@ -1,7 +1,7 @@
-<?php
+<?php 
 /**
  * Class TuzobusApp.
- * Funciones para Backend de Tuzobús APP
+ * Clase para Backend de Tuzobús APP
  *
  * @author Pablo César Sánchez Porta <pcsp85@gmail.com>
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
@@ -28,7 +28,7 @@ class TuzobusApp
 		$this->root = dirname($_SERVER['PHP_SELF']) . '/';
 		require_once($this->path . 'db_config.php');
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-			$this->errors[] = 'Se requiee PHP 5.3.7 o superior para que esta webApp funcione, verifíca esta información con tu Proveedor.';
+			$this->errors[] = 'Se requiere PHP 5.3.7 o superior para que esta webApp funcione, verifíca esta información con tu Proveedor.';
 		}elseif(version_compare(PHP_VERSION, '5.5.0', '<')){
 			require_once($this->path.'classes/password_compatibility_library.php');
 		}
@@ -37,6 +37,8 @@ class TuzobusApp
 		if($this->db->connect_errno){
 			$this->errors[] = 'Error al Conectar con la Base de Datos, verifica la información';
 		}
+
+		$this->init();
 
 		require_once($this->path . 'classes/Login.php');
 		$this->login = new Login();
@@ -55,8 +57,51 @@ class TuzobusApp
 
 	}
 
-	public function init(){
+	private function init(){
 		/* Creando tablas y elementos para instalacion de la Aplicación */
+		$sql = "SHOW TABLES LIKE 'logs'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			$sql = "CREATE TABLE IF NOT EXISTS `logs` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user_id` int(11) NOT NULL, `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, `IP` varchar(20) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de logs';
+		}
+
+		$sql = "SHOW TABLES LIKE 'users'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			$sql = "CREATE TABLE IF NOT EXISTS `users` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user_name` varchar(60) NOT NULL, `user_email` varchar(128) NOT NULL, `user_password_hash` varchar(60) NOT NULL, `name` tinytext NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de usuarios';
+		}
+
+		$sql = "SELECT id FROM users WHERE user_name LIKE 'Admin'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			require_once($this->path.'classes/Registration.php');
+			$_POST = array(
+				'register'=>true,
+				'user_name'=> 'Admin',
+				'user_password_new' => 'tuz08u5',
+				'user_password_repeat' => 'tuz08u5',
+				'user_email' => 'chimopo@gmail.com',
+				'name' => 'Administrador'
+				);
+			$Admin = new Registration();
+			$this->messages[] = $Admin->messages[0];
+		}
+
+		$sql = "SHOW TABLES LIKE 'invitations'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			$sql = "CREATE TABLE IF NOT EXISTS `invitations` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `code` varchar(10) NOT NULL,  `create_date` datetime NOT NULL,  `create_by` int(11) NOT NULL,  `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP,  `modify_by` int(11) NOT NULL,  `activation_date` datetime NOT NULL,  `activation_device` varchar(60) NOT NULL,  `activation_connection` varchar(30) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Invitaciones';
+		}
+
+		$sql = "SHOW TABLES LIKE 'ads'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` datetime NOT NULL, `end_date` datetime NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Anuncios';	
+		}
 	}
 
 	public function renderPartial($template, $echo=true, $TB=null){
