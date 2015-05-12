@@ -23,6 +23,6 @@ switch ($action) {
 if(!isset($format) || $format == 'json'){
 	echo json_encode($response);
 }else{
-	print_r($response);
+	var_dump($response);
 }
 ?>

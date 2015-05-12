@@ -99,7 +99,7 @@ class TuzobusApp
 		$sql = "SHOW TABLES LIKE 'ads'";
 		$chk = $this->db->query($sql);
 		if($chk->num_rows == 0){
-			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` datetime NOT NULL, `end_date` datetime NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` datetime NOT NULL, `end_date` datetime NOT NULL, `publish` tinyint(1) NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Anuncios';	
 		}
 	}
@@ -165,6 +165,10 @@ class TuzobusApp
 		echo $response;
 	}
 
+	/*
+	 * Funciones de respuesta utilizadas en ajax.php
+	 */
+
 	public function change_password($password, $password_new, $password_repeat){
 		$response = array();
 		$response['result'] = 'error';
@@ -193,6 +197,21 @@ class TuzobusApp
 
 			}else $response['message'] = 'Error al sincroonizar los datos de usuario';
 		}
+		return $response;
+	}
+
+	/*
+	 * Funciones de respuesta utilizadas en Fuente de datos V
+	 */
+	public function get_ads(){
+		$response = array();
+		$hoy = date("Y-m-d");
+		$sql = "SELECT id, title, image FROM ads WHERE begin_date <= '$hoy' AND end_date >= '$hoy' AND publish = 1 ORDER BY begin_date DESC LIMIT 5";
+		$data = $this->db->query($sql);
+		if($data->num_rows >0){
+			while($row = $data->fetch_assoc()) $response[] = $row;
+		}
+
 		return $response;
 	}
 }

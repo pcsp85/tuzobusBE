@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `ads` (
   `href` tinytext NOT NULL,
   `begin_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
+  `publish` tinyint(1) NOT NULL,
   `create_date` datetime NOT NULL,
   `create_by` int(11) NOT NULL,
   `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP,
