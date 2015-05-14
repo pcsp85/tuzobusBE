@@ -54,3 +54,10 @@ CREATE TABLE IF NOT EXISTS `ads` (
   `modify_by` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `options` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `option` varchar(60) NOT NULL,
+  `value` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1;
