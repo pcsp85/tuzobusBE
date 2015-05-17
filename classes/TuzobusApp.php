@@ -94,6 +94,8 @@ class TuzobusApp
 		if($chk->num_rows == 0){
 			$sql = "CREATE TABLE IF NOT EXISTS `invitations` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `code` varchar(10) NOT NULL,  `create_date` datetime NOT NULL,  `create_by` int(11) NOT NULL,  `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP,  `modify_by` int(11) NOT NULL,  `activation_date` datetime NOT NULL,  `activation_device` varchar(60) NOT NULL,  `activation_connection` varchar(30) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Invitaciones';
+			$sql = file_get_contents($this->path.'invitations.sql', FILE_USE_INCLUDE_PATH);
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se cargo el listado de códigos';
 		}
 
 		$sql = "SHOW TABLES LIKE 'ads'";
@@ -108,9 +110,45 @@ class TuzobusApp
 		if($chk->num_rows == 0){
 			$sql = "CREATE TABLE IF NOT EXISTS `options` (  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `option` varchar(60) NOT NULL,  `value` text NOT NULL,  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1;";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de opciones';
-			$sql = "INSERT INTO `options` (`option`, `value`) VALUES ('begin_date', '2015-05-10'), ('end_date', '2015-06-15'), ('android_store', ''), ('aple_store', ''), ('android_rank', ''), ('apple_rank', '')";
+			$sql = "INSERT INTO `options` (`option`, `value`) VALUES ('begin_date', '2015-05-10'), ('end_date', '2015-06-15'), ('android_store', ''), ('apple_store', ''), ('android_rank', ''), ('apple_rank', '')";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se agregaron las opciones por defecto.';
 		}
+	}
+
+	public function get_option($option){
+		$option = $this->db->real_escape_string($option);
+		$sql = "SELECT `value` FROM `options` WHERE `option` = '$option'";
+		$res = $this->db->query($sql);
+		if($res->num_rows == 1){
+			$r = $res->fetch_object();
+			return $r->value;
+		}
+		return false;
+	}
+
+	public function update_option($option, $value){
+		$option = $this->db->real_escape_string($option);
+		$value = $this->db->real_escape_string($value);
+		$sql = "UPDATE `options` SET `value` = '$value' WHERE `option` = '$option'";
+		if($this->db->query($sql) === TRUE){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public function num_users(){
+		$sql = "SELECT `id` FROM `users`";
+		$result = $this->db->query($sql);
+		return $result->num_rows;
+	}
+
+	public function num_ads($filter = false){
+		$sql = "SELECT `id` FROM `ads`";
+		if($filter!=false && $filter == 'publish') $sql .= " WHERE `publish` = 1";
+		if($filter!=false && $filter == 'no_publish') $sql .= " WHERE `publish` != 1";
+		$result = $this->db->query($sql);
+		return $result->num_rows; 
 	}
 
 	public function renderPartial($template, $echo=true, $TB=null){

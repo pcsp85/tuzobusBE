@@ -63,6 +63,12 @@ a.nounderline
             margin-bottom: 15px;
             padding: 4px 9px;
         }
-#change_password form{
+.modal form{
     margin: 0;
+}
+.stores legend img{
+    width: 40px;
+}
+.loading{
+    display: none;
 }

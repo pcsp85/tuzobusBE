@@ -4,7 +4,7 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 <html class="no-js">
 <head>
     <meta charset="utf-8">
-    <title>TuzobusAdmin</title>
+    <title>Tuzobus Admin</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -31,7 +31,7 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <span class="brand"><!--img src="<?=$TB->root;?>favicon.png"--> TuzbusAdmin</span>
+                <span class="brand"><!--img src="<?=$TB->root;?>favicon.png"--> Tuzbus Admin</span>
 
                 <div class="nav-collapse collapse">
 

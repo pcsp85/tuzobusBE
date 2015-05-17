@@ -11,7 +11,48 @@ switch ($action) {
 	case 'change_password':
 		$response = $TB->change_password($user_password, $user_password_new, $user_password_repeat);
 		break;
-	
+
+	case 'save_dates':
+		$err = '';
+		if($TB->update_option('begin_date',$begin_date) == false) $err .= 'Error al guardar';
+		if($TB->update_option('end_date',$end_date) == false) $err .= 'Error al guardar';
+		if($err==''){
+			$response = array(
+				'result' => 'success',
+				'message' => 'La información se guardo con éxito'
+				);
+		}else{
+			$response = array(
+				'result' => 'error',
+				'message' => 'Error al guardar, intentalo de nuevo'
+				);
+		}
+		break;
+
+	case 'save_store':
+		$err = '';
+		if($TB->update_option($so.'_store',$store) == false) $err .= 'Error al guardar';
+		if($TB->update_option($so.'_rank',$rank) == false) $err .= 'Error al guardar';
+		if($err==''){
+			$response = array(
+				'result' => 'success',
+				'message' => 'La información se guardo con éxito'
+				);
+		}else{
+			$response = array(
+				'result' => 'error',
+				'message' => 'Error al guardar, intentalo de nuevo'
+				);
+		}
+		break;
+
+	case 'get_dates':
+		$response = array(
+			'begin_date'	=> $TB->get_option('begin_date'),
+			'end_date'		=> $TB->get_option('end_date')
+			);
+		break;
+
 	default:
 		$response = array(
 			'result'	=> 'error',
