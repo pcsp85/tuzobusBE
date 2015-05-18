@@ -7,6 +7,17 @@ if(isset($_GET)) extract($_GET);
 if(isset($_POST)) extract($_POST);
 
 switch ($action) {
+	case 'activation_dates':
+		$response = array(
+			'begin_date'	=> $V->get_option('begin_date'),
+			'end_date'		=> $V->get_option('end_date')
+			);
+		break;
+
+	case 'activate_App':
+		$response = $V->activate_App($code, $device, $conection);
+		break;
+
 	case 'get_ads':
 		$response = $V->get_ads();
 		break;

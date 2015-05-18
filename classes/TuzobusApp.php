@@ -250,10 +250,44 @@ class TuzobusApp
 	/*
 	 * Funciones de respuesta utilizadas en Fuente de datos V
 	 */
+	public function activate_App ($code, $device, $conection){
+		$response = array(
+			'result' => 'error',
+			'message' => ''
+			);
+		if(!isset($code) || $code == '') $response['message'] = 'Debes proporcionar el código de activación';
+		elseif(!isset($device) || $device == '') $response['message'] = 'Dispositivo desconocido';
+		elseif(!isset($conection) || $conection == '') $response['message'] = 'Conexion desconocida';
+		else{
+			$code = $this->db->real_escape_string($code);
+			$sql = "SELECT * FROM `invitations` WHERE `code` = '$code'";
+			$chk = $this->db->query($sql);
+			if($chk->num_rows == 1){
+				$c = $chk->fetch_object();
+				if($c->activation_date == '0000-00-00 00:00:00'){
+					$sql = "UPDATE `invitations` SET `activation_date` = NOW(), `activation_device` = '$device', `activation_connection` = '$conection' WHERE `id` = $c->id";
+					if($this->db->query($sql) === TRUE){
+						$response = array(
+							'result'	=> 'success',
+							'message'	=> 'Tuzobús App se activó con éxito, gracias'
+							);
+					}else{
+						$response['message'] = 'No fue posible activar Tuzobús App, intentalo de nuevo';
+					}
+				}else{
+					$response['message'] = 'El código proporcionado ya habia sido utilizado';
+				}
+			}else{
+				$response['message'] = 'El código proporcionado no existe';
+			}
+		}
+		return $response;
+	}
+
 	public function get_ads(){
 		$response = array();
 		$hoy = date("Y-m-d");
-		$sql = "SELECT id, title, image FROM ads WHERE begin_date <= '$hoy' AND end_date >= '$hoy' AND publish = 1 ORDER BY begin_date DESC LIMIT 5";
+		$sql = "SELECT id, title, image FROM ads WHERE begin_date <= '$hoy' AND end_date >= '$hoy' AND publish = 1 ORDER BY RAND() LIMIT 5";
 		$data = $this->db->query($sql);
 		if($data->num_rows >0){
 			while($row = $data->fetch_assoc()) $response[] = $row;
