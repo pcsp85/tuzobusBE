@@ -53,6 +53,14 @@ switch ($action) {
 			);
 		break;
 
+	case 'invitations':
+		$params = array(
+			'search'	=> isset($search) && $search!=''? $search : false,
+			'npag'		=> isset($npag) && $npag!='' ? $npag : false,
+			);
+		$response = $TB->renderPartial('parts/table', false, $TB->invitations($params));
+		break;
+
 	default:
 		$response = array(
 			'result'	=> 'error',
@@ -64,6 +72,6 @@ switch ($action) {
 if(!isset($format) || $format == 'json'){
 	echo json_encode($response);
 }else{
-	var_dump($response);
+	echo($response);
 }
 ?>

@@ -92,7 +92,7 @@ class TuzobusApp
 		$sql = "SHOW TABLES LIKE 'invitations'";
 		$chk = $this->db->query($sql);
 		if($chk->num_rows == 0){
-			$sql = "CREATE TABLE IF NOT EXISTS `invitations` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `code` varchar(10) NOT NULL,  `create_date` datetime NOT NULL,  `create_by` int(11) NOT NULL,  `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP,  `modify_by` int(11) NOT NULL,  `activation_date` datetime NOT NULL,  `activation_device` varchar(60) NOT NULL,  `activation_connection` varchar(30) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			$sql = "CREATE TABLE IF NOT EXISTS `invitations` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `code` varchar(10) NOT NULL,  `create_date` datetime NOT NULL,  `create_by` int(11) NOT NULL,  `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP,  `modify_by` int(11) NOT NULL,  `activation_date` datetime NOT NULL,  `activation_device` varchar(60) NOT NULL,  `activation_connection` varchar(30) NOT NULL,  PRIMARY KEY (`id`), FULLTEXT KEY `code` (`code`)) ENGINE=MyISAM AUTO_INCREMENT=1";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Invitaciones';
 			$sql = file_get_contents($this->path.'invitations.sql', FILE_USE_INCLUDE_PATH);
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se cargo el listado de códigos';
@@ -141,6 +141,66 @@ class TuzobusApp
 		$sql = "SELECT `id` FROM `users`";
 		$result = $this->db->query($sql);
 		return $result->num_rows;
+	}
+
+	public function invitations($params=null){
+		$sql = "SELECT * FROM `invitations` ";
+		if(isset($params['search']) && $params['search']!=''){
+			$search = $this->db->real_escape_string($params['search']);
+			$sql .= "WHERE MATCH(`code`) AGAINST ('%$search%') ";
+		}
+		$rpp = isset($params['rpp']) ? $params['rpp'] : 25;
+		$treg = $this->db->query($sql)->num_rows;
+		$tpag = ceil($treg/$rpp);
+		$npag = isset($params['npag']) ? $params['npag'] : 1;
+		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
+		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
+		$data = array();
+		if($data_q->num_rows>0){
+			$n = 0;
+			while($row = $data_q->fetch_object()){
+				//$data[] = $row;
+				foreach($row as $k => $v){
+					if($k=='create_by' || $k=='modify_by'){
+						$data[$n][$k] = $this->get_userdata($v)->name;
+					}else{
+						$data[$n][$k] = $v;
+					}
+
+				}$n++;
+			}
+		}
+
+		$result = (object) array(
+			'name'		=> 'invitaciones',
+			'treg'		=> $treg,
+			'rpp'		=> $rpp,
+			'tpag'		=> $tpag,
+			'npag'		=> $npag,
+			'data'		=> $data,
+			'columns'	=> array(
+				'ID',
+				'Código',
+				'Fecha de Alta',
+				'Creado por',
+				'Fecha de Modificación',
+				'Modificado por',
+				'Fecha de Activación',
+				'Dispositivo',
+				'Tipo de conexion'
+				),
+			'root' => $this->root
+			);
+		return $result;
+	}
+
+	public function get_userdata($id){
+		if($id==0){
+			$result = (object) array('name' => 'Sistema');
+		}else{
+
+		}
+		return $result;
 	}
 
 	public function num_ads($filter = false){

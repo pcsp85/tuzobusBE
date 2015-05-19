@@ -86,6 +86,17 @@ var TB = function (){
 				});
 			}
 		});
+
+		$('.invitaciones form.form-search').submit(function (e){
+			e.preventDefault();
+		});
+		$('.invitaciones .pagination a').click(function (e){
+			e.preventDefault();
+			$('.invitaciones form.form-search .loading').show();
+			$.post(var_root+'ajax.php', {action:'invitations',npag:$(this).attr('href'),search:$('.invitaciones form.form-search input').val()}, function(data){
+				$('.invitaciones').html(data);
+			});
+		});
 	};
 
 	return {

@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `invitations` (
   `activation_date` datetime NOT NULL,
   `activation_device` varchar(60) NOT NULL,
   `activation_connection` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `code` (`code`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `ads` (
