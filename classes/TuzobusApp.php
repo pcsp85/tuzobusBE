@@ -110,7 +110,7 @@ class TuzobusApp
 		if($chk->num_rows == 0){
 			$sql = "CREATE TABLE IF NOT EXISTS `options` (  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `option` varchar(60) NOT NULL,  `value` text NOT NULL,  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1;";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de opciones';
-			$sql = "INSERT INTO `options` (`option`, `value`) VALUES ('begin_date', '2015-05-10'), ('end_date', '2015-06-15'), ('android_store', ''), ('apple_store', ''), ('android_rank', ''), ('apple_rank', '')";
+			$sql = "INSERT INTO `options` (`option`, `value`) VALUES ('begin_date', '2015-05-10'), ('end_date', '2015-06-15'), ('Android_store', ''), ('iOS_store', ''), ('Android_rank', ''), ('iOS_rank', '')";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se agregaron las opciones por defecto.';
 		}
 	}
@@ -147,7 +147,7 @@ class TuzobusApp
 		$sql = "SELECT * FROM `invitations` ";
 		if(isset($params['search']) && $params['search']!=''){
 			$search = $this->db->real_escape_string($params['search']);
-			$sql .= "WHERE MATCH(`code`) AGAINST ('%$search%') ";
+			$sql .= "WHERE `code` LIKE ('%$search%') ";
 		}
 		$rpp = isset($params['rpp']) ? $params['rpp'] : 25;
 		$treg = $this->db->query($sql)->num_rows;
@@ -189,7 +189,8 @@ class TuzobusApp
 				'Dispositivo',
 				'Tipo de conexion'
 				),
-			'root' => $this->root
+			'root' => $this->root,
+			'sql' => $sql
 			);
 		return $result;
 	}
@@ -329,13 +330,20 @@ class TuzobusApp
 					if($this->db->query($sql) === TRUE){
 						$response = array(
 							'result'	=> 'success',
-							'message'	=> 'Tuzobús App se activó con éxito, gracias'
+							'message'	=> '¡Tuzobús App se activó con éxito, gracias!'
 							);
 					}else{
 						$response['message'] = 'No fue posible activar Tuzobús App, intentalo de nuevo';
 					}
 				}else{
-					$response['message'] = 'El código proporcionado ya habia sido utilizado';
+					if($c->activation_device == $device){
+						$response = array(
+							'result'	=> 'success',
+							'message'	=> '¡Tuzobús App se activó con éxito, gracias!'
+							);
+					}else{
+						$response['message'] = 'El código proporcionado ya habia sido utilizado';
+					}
 				}
 			}else{
 				$response['message'] = 'El código proporcionado no existe';
@@ -355,4 +363,44 @@ class TuzobusApp
 
 		return $response;
 	}
+
+	public function coments($coments,$email){
+		require_once($this->path.'classes/PHPMailer/PHPMailerAutoload.php');
+		if(!isset($coments) || $coments == ''){
+			$response = array(
+				'result' => 'error',
+				'message' => 'El campo de comentarios es obligatorio'
+				);
+		}else{
+			$mail = new PHPMailer;
+
+			$body = '<p>Has recibido comentarios desde Tuzobús App, a continuación encontrarás los detalles:</p><p>'.$coments.'</p>';
+
+			$mail->From = 'admin@tuzobus.com';
+			$mail->FromName = 'Tuzobus Admin';
+			$mail->addaddress('chimopo@gmail.com');
+			if(isset($email) && $email!=''){
+				$mail->addReplyTo($email);
+			$body .= '<p>Además incluyó su correo electrónico: '.$email.'</p><p><strong>Nota:</strong>Puedes enviar una respuesta dando click en responder.</p>';
+			}
+			$mail->addBCC('pcsp85@gmail.com');
+
+			$mail->Subject = utf8_decode('Comentarios de Tuzobús App');
+			$mail->Body = utf8_decode($body);
+			$mail->AltBody = utf8_decode(strip_tags($body));
+
+			if(!$mail->send()){
+				$response = array(
+					'result' => 'error',
+					'message' => 'Ocurrio un error al enviar el mensaje, por favor intentalo de nuevo. <strong>'.$mail->ErrorInfo.'</strong>'
+					);
+			}else{
+				$response = array(
+					'result' => 'success',
+					'message' => 'En mensaje fue enviado con éxito, muchas gracias, reralmente apreciamos tus comentarios.'
+					);
+			}
+		}
+		return $response;
+	}	
 }

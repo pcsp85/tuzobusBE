@@ -92,9 +92,12 @@ var TB = function (){
 		});
 		$('.invitaciones .pagination a').click(function (e){
 			e.preventDefault();
+			var a = $(this);
 			$('.invitaciones form.form-search .loading').show();
-			$.post(var_root+'ajax.php', {action:'invitations',npag:$(this).attr('href'),search:$('.invitaciones form.form-search input').val()}, function(data){
-				$('.invitaciones').html(data);
+			$.post(var_root+'ajax.php', {action:'invitations',npag:$(this).attr('href'),search:$('.invitaciones form.form-search input').val(), format:'html'}, function(data){
+				$('.invitaciones .response').html($($(data)[2]).html());
+				$('.invitaciones form.form-search .loading').hide();
+				a.parent().addClass('active').siblings().removeClass('active');
 			});
 		});
 	};

@@ -67,14 +67,14 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 		<form>
 			<fieldset>
 				<legend><img src="img/google_play_icon.png"> Android</legend>
-				<input type="hidden" name="so" value="android">
+				<input type="hidden" name="so" value="Android">
 				<div class="input-prepend">
 					<span class="add-on"><i class="icon-large icon-shopping-cart"></i></span>
-					<input type="text" class="span11" name="store" value="<?=$TB->get_option('android_store');?>" placeholder="Google Play" required>
+					<input type="text" class="span11" name="store" value="<?=$TB->get_option('Android_store');?>" placeholder="Google Play" required>
 				</div>
 				<div class="input-prepend">
 					<span class="add-on"><i class="icon-large icon-star"></i></span>
-					<input type="text" class="span11" name="rank" value="<?=$TB->get_option('android_rank');?>" placeholder="Calificar App" required>
+					<input type="text" class="span11" name="rank" value="<?=$TB->get_option('Android_rank');?>" placeholder="Calificar App" required>
 				</div>
 				<button class="btn btn-primary pull-right">Guardar</button>
 				<img src="img/ajax-loader.gif" class="loading pull-right"> 
@@ -85,14 +85,14 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 		<form>
 			<fieldset>
 				<legend><img src="img/apple.png"> IOS</legend>
-				<input type="hidden" name="so" value="apple">
+				<input type="hidden" name="so" value="iOS">
 				<div class="input-prepend">
 					<span class="add-on"><i class="icon-large icon-shopping-cart"></i></span>
-					<input type="text" class="span11" name="store" value="<?=$TB->get_option('apple_store');?>" placeholder="Apple Store" required>
+					<input type="text" class="span11" name="store" value="<?=$TB->get_option('iOS_store');?>" placeholder="iOS Store" required>
 				</div>
 				<div class="input-prepend">
 					<span class="add-on"><i class="icon-large icon-star"></i></span>
-					<input type="text" class="span11" name="rank" value="<?=$TB->get_option('apple_rank');?>" placeholder="Calificar App" required>
+					<input type="text" class="span11" name="rank" value="<?=$TB->get_option('iOS_rank');?>" placeholder="Calificar App" required>
 				</div>
 				<button class="btn btn-primary pull-right">Guardar</button>
 				<img src="img/ajax-loader.gif" class="loading pull-right"> 

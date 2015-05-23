@@ -1,10 +1,14 @@
-<?php error_reporting(0);
+<?php //error_reporting(0);
 require_once('../classes/TuzobusApp.php');
 
 $V =  new TuzobusApp();
 
 if(isset($_GET)) extract($_GET);
 if(isset($_POST)) extract($_POST);
+$payload = json_decode(file_get_contents("php://input"));
+if(count($payload)>0) foreach ($payload as $key => $value) {
+	eval('$'.$key.'=\''.$value.'\';');
+}
 
 switch ($action) {
 	case 'activation_dates':
@@ -22,6 +26,17 @@ switch ($action) {
 		$response = $V->get_ads();
 		break;
 	
+	case 'store_info':
+		$response = array(
+			'store' => $V->get_option($so.'_store'),
+			'rank' => $V->get_option($so.'_rank')
+			);
+		break;
+		
+	case 'coments':
+		$response = $V->coments($coments,$email);
+		break;
+
 	default:
 		$response = array(
 			'result' => 'TuzobusApp',
