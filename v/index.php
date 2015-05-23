@@ -26,6 +26,10 @@ switch ($action) {
 		$response = $V->get_ads();
 		break;
 	
+	case 'go_ad':
+		$response = $V->go_ad($id_ad,$device);
+		break;
+
 	case 'store_info':
 		$response = array(
 			'store' => $V->get_option($so.'_store'),

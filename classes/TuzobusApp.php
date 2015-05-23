@@ -102,7 +102,14 @@ class TuzobusApp
 		$chk = $this->db->query($sql);
 		if($chk->num_rows == 0){
 			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` datetime NOT NULL, `end_date` datetime NOT NULL, `publish` tinyint(1) NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
-			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Anuncios';	
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Anuncios';
+		}
+
+		$sql = "SHOW TABLES LIKE 'ads_log'";
+		$chk = $this->db->query($sql);
+		if($chk->num_rows == 0){
+			$sql = "CREATE TABLE IF NOT EXISTS `ads_log` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `id_ad` int(11) NOT NULL, `device` tinytext NOT NULL, `href` tinytext NOT NULL, `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de estadísticas para Anuncios';
 		}
 
 		$sql = "SHOW TABLES LIKE 'options'";
@@ -188,6 +195,64 @@ class TuzobusApp
 				'Fecha de Activación',
 				'Dispositivo',
 				'Tipo de conexion'
+				),
+			'root' => $this->root,
+			'sql' => $sql
+			);
+		return $result;
+	}
+
+	public function ads($params=null){
+		$sql = "SELECT * FROM `ads` ";
+		if(isset($params['search']) && $params['search']!=''){
+			$search = $this->db->real_escape_string($params['search']);
+			$sql .= "WHERE `title` LIKE ('%$search%') ";
+		}
+		$rpp = isset($params['rpp']) ? $params['rpp'] : 25;
+		$treg = $this->db->query($sql)->num_rows;
+		$tpag = ceil($treg/$rpp);
+		$npag = isset($params['npag']) ? $params['npag'] : 1;
+		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
+		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
+		$data = array();
+		if($data_q->num_rows>0){
+			$n = 0;
+			while($row = $data_q->fetch_object()){
+				//$data[] = $row;
+				foreach($row as $k => $v){
+					if($k=='create_by' || $k=='modify_by'){
+						$data[$n][$k] = $this->get_userdata($v)->name;
+					}elseif($k=='image'){
+						$data[$n][$k] = '<img src="'.$v.'">';
+					}elseif($k=='publish'){
+						$data[$n][$k] = $v==1 ? 'Si' : 'No';
+					}else{
+						$data[$n][$k] = $v;
+					}
+
+				}$n++;
+			}
+		}
+
+		$result = (object) array(
+			'name' => 'anuncios',
+			'treg' => $treg,
+			'rpp'		=> $rpp,
+			'tpag'		=> $tpag,
+			'npag'		=> $npag,
+			'data'		=> $data,
+			'columns'	=> array(
+				'ID',
+				'Titulo',
+				'Imagen',
+				'Destino',
+				'Vigencia inicia',
+				'Vigencia termina',
+				'Publicado',
+				'Creado',
+				'Creado por',
+				'Modificación',
+				'Modificado por'
 				),
 			'root' => $this->root,
 			'sql' => $sql
@@ -361,6 +426,33 @@ class TuzobusApp
 			while($row = $data->fetch_assoc()) $response[] = $row;
 		}
 
+		return $response;
+	}
+
+	public function go_ad($id_ad, $device){
+		if(!isset($id_ad) || $id_ad==''){
+			$response = array(
+				'result' => 'error',
+				'message' => 'Falta la referencia del anuncio'
+				);
+		}else{
+			$sql = "SELECT `href` FROM `ads` WHERE `id` = $id_ad";
+			$ad = $this->db->query($sql);
+			if($ad->num_rows==1){
+				$href = $ad->fetch_object()->href;
+				$sql = "INSERT INTO `ads_log` (`id_ad`, `device`, `href`) VALUES ($id_ad, '$device', '$href')";
+				$this->db->query($sql);
+				$response = array(
+					'result' => 'success',
+					'href' => $href
+					);
+			}else{
+				$response = array(
+					'result' => 'error',
+					'message' => 'El anuncio no existe'
+					);
+			}
+		}
 		return $response;
 	}
 

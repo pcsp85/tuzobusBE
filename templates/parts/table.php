@@ -11,7 +11,6 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 	</form>
 <?php endif;?>
 <div class="response">
-<?=$TB->sql;?>
 <?php if($TB->treg>0): ?>
 <p>Existen <strong><?=$TB->treg;?></strong> <?=$TB->name;?>, mostrando <strong><?=$TB->rpp;?></strong>, página <strong><?=$TB->npag;?></strong> de <strong><?=$TB->tpag;?></strong></p>
 <table>

@@ -1,3 +1,4 @@
+<?php if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 <h1><i class="icon-envelope"></i> Invitaciones</h1>
 <?php if(!isset($TB->params[1])): ?>
 	<div class="invitaciones">
