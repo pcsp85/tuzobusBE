@@ -100,6 +100,14 @@ var TB = function (){
 				a.parent().addClass('active').siblings().removeClass('active');
 			});
 		});
+
+		$('input[name="select-image"]').click(function (e){
+			$(this).parent().find('input[type=file]').click();
+		});
+		$('input[type=file]').on('change',function (){
+			$(this).parent().prev().val($(this).val());
+		});
+
 	};
 
 	return {
