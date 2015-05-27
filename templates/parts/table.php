@@ -19,16 +19,22 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 			<?php foreach ($TB->columns as $column): ?>
 				<th><?=$column;?></th>
 			<? endforeach;?>
+			<th>&nbsp;</th>
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($TB->data as $field): ?>
-		<tr>
+		<?php $nf=0; foreach ($TB->data as $field): ?>
+		<tr data-row="<?=$nf;?>">
 			<?php foreach ($field as $key => $value): ?>
-				<td><?=$value?></td>
+				<td data-col="<?=$key;?>"><?=$value?></td>
 			<?php endforeach;?>
+			<td>
+				<a href="<?=$TB->name;?>/<?=$field['id']?>" class="tip" data-original-title="Ver"><i class="icon-large icon-eye-open"></i></a>
+				<a href="javaScript:TB.row_edit($(this).parent().siblings())" class="tip" data-original-title="Editar"><i class="icon-large icon-edit"></i></a>
+				<a href="javaScript:TB.row_delete($(this).parent().siblings('td[data-col=id]'))" class="tip" data-original-title="Eliminar"><i class="icon-large icon-trash"></i></a>
+			</td>
 		</tr>
-		<? endforeach;?>
+		<? $nf++; endforeach;?>
 	</tbody>
 </table>
 <?php else: ?>

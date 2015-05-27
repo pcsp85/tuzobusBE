@@ -223,7 +223,7 @@ class TuzobusApp
 					if($k=='create_by' || $k=='modify_by'){
 						$data[$n][$k] = $this->get_userdata($v)->name;
 					}elseif($k=='image'){
-						$data[$n][$k] = '<img src="'.$v.'">';
+						$data[$n][$k] = '<img src="'.$v.'" style="position:absolute; display:none;" onmouseout="$(this).hide()""><span onmouseover="$(this).prev().show()">'.$v.'</span>';
 					}elseif($k=='publish'){
 						$data[$n][$k] = $v==1 ? 'Si' : 'No';
 					}else{
