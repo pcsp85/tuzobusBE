@@ -30,8 +30,8 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 			<?php endforeach;?>
 			<td>
 				<a href="<?=$TB->name;?>/<?=$field['id']?>" class="tip" data-original-title="Ver"><i class="icon-large icon-eye-open"></i></a>
-				<a href="javaScript:TB.row_edit($(this).parent().siblings())" class="tip" data-original-title="Editar"><i class="icon-large icon-edit"></i></a>
-				<a href="javaScript:TB.row_delete($(this).parent().siblings('td[data-col=id]'))" class="tip" data-original-title="Eliminar"><i class="icon-large icon-trash"></i></a>
+				<a href="#CU_form" data-toggle="modal" class="tip edit" data-original-title="Editar"><i class="icon-large icon-edit"></i></a>
+				<a href="#delete" data-toggle="modal" class="tip delete" data-original-title="Eliminar"><i class="icon-large icon-trash"></i></a>
 			</td>
 		</tr>
 		<? $nf++; endforeach;?>

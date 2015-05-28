@@ -12,7 +12,7 @@
 <div id="CU_form" class="modal hide fade">
 	<div class="modal-header">
 		<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3> anuncio</h3>
+		<h3><span></span> anuncio</h3>
 	</div>
 	<form name="ads_form" class="">
 	<div class="modal-body">
@@ -38,5 +38,22 @@
 			<input class="form-contol span10" type="date" name="end_date" placeholder="Vigencia termina" required>
 		</div>
 	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary">Guardar</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+	</div>
 	</form>
+</div>
+<div id="delete" class="modal hide fade">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Eliminar anuncio</h3>
+	</div>
+	<div class="modal-body">
+		<p>¿Estas seguro de que deseas eliminar el anuncio "<strong></strong>"?</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary deleteConfirmation" data-deleteId="" data-deleteTable="ads">Aceptar</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+	</div>
 </div>

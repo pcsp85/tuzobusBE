@@ -101,6 +101,54 @@ var TB = function (){
 			});
 		});
 
+		//Funcion Activa formulario para crear elementos
+		$('a.create').click(function (e){
+			var m = $('#CU_form'), f = $('#CU_form form');
+			m.find('h3 span').html('Crear');
+		});
+		//Funcion Activa formulario para editar elementos
+		$('a.edit').click(function (e){
+			var m = $('#CU_form'), f = m.find('form'), row = $(this).parent().siblings();
+			m.find('h3 span').html('Editar');
+			$(row).each(function (i,el){
+			  var col = $(el).attr('data-col');
+			  if(col!='image'){
+			  	f.find('input[name="'+col+'"]').val($(el).text());
+			  }
+				
+			});
+		});
+		//Resstabeciendo formulario al ocultar
+		$('#CU_form').on('hidden', function(){
+			$(this).find('form').get(0).reset();
+		});
+		//Funcion Solicitar confirmacion para elimiar elemento
+		$('a.delete').click(function (e){
+			var id = $(this).parent().siblings('td[data-col="id"]').html(), title = $(this).parent().siblings('td[data-col="title"]').html();
+			$('#delete .modal-body p strong').html(title);
+			$('#delete .deleteConfirmation').attr('data-deleteId', id);
+		});
+		//funcion Elimiar elemento
+		$('button.deleteConfirmation').click(function (e){
+			var button = $(this);
+			button.prev('img').detach();
+			button.parent().prev().find('.alert').detach();
+			button.attr('disabled',true).before('<img src="'+var_root+'img/ajax-loader.gif">');
+			$.getJSON(var_root+'ajax.php',{action:'deleteItem', id:button.attr('data.deleteId'), table:button.attr('data.deleteTable')}, function (data){
+				if(data.result=="error"){
+					button.parent().prev().append('<div class="alert alert-box">'+data.message+'</div>');
+				}else if(data.result=='success'){
+					button.parent().prev().append('<div class="alert alert-success">'+data.message+'</div>');
+				} 
+				button.attr('disabled',false).prev('img').detach();
+			});
+		});
+		//Formateando al ocultar
+		$('#delete').on('hidden', function (){
+			$(this).find('.alert').detach();
+		});
+
+
 		$('input[name="select-image"]').click(function (e){
 			$(this).parent().find('input[type=file]').click();
 		});
