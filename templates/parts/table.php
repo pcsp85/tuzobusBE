@@ -2,10 +2,11 @@
 if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 
 <?php if(!isset($TB->search) || $TB->search==true):?>
-	<form name="search" class="form-search">
+	<form name="search" class="form-search" method="get">
+		<input type="hidden" name="npag" value="<?=isset($_GET['npag'])? $_GET['npag'] : '';?>">
 		<div class="input-prepend">
 			<span class="add-on"><i class="icon-large icon-search"></i></span>
-			<input type="search" placeholder="Buscar">
+			<input type="search" name="search" placeholder="Buscar" value="<?=isset($_GET['search'])? $_GET['search'] : '';?>">
 		</div>
 		<button class="btn">ir</button> <img src="<?=$TB->root;?>img/ajax-loader.gif" class="loading">
 	</form>

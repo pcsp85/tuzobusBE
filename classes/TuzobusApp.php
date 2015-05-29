@@ -150,16 +150,16 @@ class TuzobusApp
 		return $result->num_rows;
 	}
 
-	public function invitations($params=null){
+	public function invitations(){
 		$sql = "SELECT * FROM `invitations` ";
-		if(isset($params['search']) && $params['search']!=''){
-			$search = $this->db->real_escape_string($params['search']);
+		if(isset($_GET['search']) && $_GET['search']!=''){
+			$search = $this->db->real_escape_string($_GET['search']);
 			$sql .= "WHERE `code` LIKE ('%$search%') ";
 		}
-		$rpp = isset($params['rpp']) ? $params['rpp'] : 25;
+		$rpp = isset($_GET['rpp']) ? $_GET['rpp'] : 25;
 		$treg = $this->db->query($sql)->num_rows;
 		$tpag = ceil($treg/$rpp);
-		$npag = isset($params['npag']) ? $params['npag'] : 1;
+		$npag = isset($_GET['npag']) ? $_GET['npag'] : 1;
 		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
 		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
 		$data = array();
@@ -202,16 +202,16 @@ class TuzobusApp
 		return $result;
 	}
 
-	public function ads($params=null){
+	public function ads(){
 		$sql = "SELECT * FROM `ads` ";
-		if(isset($params['search']) && $params['search']!=''){
-			$search = $this->db->real_escape_string($params['search']);
+		if(isset($_GET['search']) && $_GET['search']!=''){
+			$search = $this->db->real_escape_string($_GET['search']);
 			$sql .= "WHERE `title` LIKE ('%$search%') ";
 		}
-		$rpp = isset($params['rpp']) ? $params['rpp'] : 25;
+		$rpp = isset($_GET['rpp']) ? $_GET['rpp'] : 25;
 		$treg = $this->db->query($sql)->num_rows;
 		$tpag = ceil($treg/$rpp);
-		$npag = isset($params['npag']) ? $params['npag'] : 1;
+		$npag = isset($_GET['npag']) ? $_GET['npag'] : 1;
 		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
 		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
 		$data = array();
@@ -223,7 +223,7 @@ class TuzobusApp
 					if($k=='create_by' || $k=='modify_by'){
 						$data[$n][$k] = $this->get_userdata($v)->name;
 					}elseif($k=='image'){
-						$data[$n][$k] = '<img src="'.$v.'" style="position:absolute; display:none;" onmouseout="$(this).hide()""><span onmouseover="$(this).prev().show()">'.$v.'</span>';
+						$data[$n][$k] = '<img src="'.$v.'" style="position:fixed; display:none;" onmouseout="$(this).hide()""><span onmouseover="$(this).prev().show()">'.$v.'</span>';
 					}elseif($k=='publish'){
 						$data[$n][$k] = $v==1 ? 'Si' : 'No';
 					}else{
@@ -258,6 +258,29 @@ class TuzobusApp
 			'sql' => $sql
 			);
 		return $result;
+	}
+
+	public function deleteItem($table, $id){
+		if($this->login->isUserLoggedin()){
+			$sql = "DELETE FROM `$table` WHERE `id` = $id LIMIT 1";
+			if($this->db->query($sql) === TRUE){
+				$response = array(
+					'result' => 'success',
+					'message' => 'El registro fué eliminado con éxito'
+					);
+			}else{
+				$response = array(
+					'result' => 'error',
+					'message' => 'Ocurrio un error al procesar la solicitud, intentalño de nuevo ' . $sql
+					);
+			}
+		}else{
+			$response = array(
+				'result' => 'error',
+				'message' => 'acceso negado'
+				);
+		}
+		return $response;	
 	}
 
 	public function get_userdata($id){

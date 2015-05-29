@@ -61,6 +61,10 @@ switch ($action) {
 		$response = $TB->renderPartial('parts/table', false, $TB->invitations($params));
 		break;
 
+	case 'deleteItem':
+		$response = $TB->deleteItem($table,$id);
+		break;
+
 	default:
 		$response = array(
 			'result'	=> 'error',

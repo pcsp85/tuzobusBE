@@ -87,18 +87,15 @@ var TB = function (){
 			}
 		});
 
-		$('.invitaciones form.form-search').submit(function (e){
-			e.preventDefault();
+		$('form.form-search input[name="search"]').on("change", function(){
+			$(this).parent().parent().find('input[name="npag"]').val(1);
 		});
-		$('.invitaciones .pagination a').click(function (e){
+
+		$('.pagination a').click(function (e){
 			e.preventDefault();
-			var a = $(this);
-			$('.invitaciones form.form-search .loading').show();
-			$.post(var_root+'ajax.php', {action:'invitations',npag:$(this).attr('href'),search:$('.invitaciones form.form-search input').val(), format:'html'}, function(data){
-				$('.invitaciones .response').html($($(data)[2]).html());
-				$('.invitaciones form.form-search .loading').hide();
-				a.parent().addClass('active').siblings().removeClass('active');
-			});
+			var a = $(this), f = $('form.form-search');
+			f.find('input[name="npag"]').val($(this).attr('href'));
+			f.submit();
 		});
 
 		//Funcion Activa formulario para crear elementos
@@ -124,7 +121,7 @@ var TB = function (){
 		});
 		//Funcion Solicitar confirmacion para elimiar elemento
 		$('a.delete').click(function (e){
-			var id = $(this).parent().siblings('td[data-col="id"]').html(), title = $(this).parent().siblings('td[data-col="title"]').html();
+			var id = $(this).parent().siblings('td[data-col="id"]').html(), title = $(this).parent().siblings('td[data-col="title"]').html() || $(this).parent().siblings('td[data-col="code"]').html();
 			$('#delete .modal-body p strong').html(title);
 			$('#delete .deleteConfirmation').attr('data-deleteId', id);
 		});
@@ -134,7 +131,7 @@ var TB = function (){
 			button.prev('img').detach();
 			button.parent().prev().find('.alert').detach();
 			button.attr('disabled',true).before('<img src="'+var_root+'img/ajax-loader.gif">');
-			$.getJSON(var_root+'ajax.php',{action:'deleteItem', id:button.attr('data.deleteId'), table:button.attr('data.deleteTable')}, function (data){
+			$.getJSON(var_root+'ajax.php',{action:'deleteItem', id:button.attr('data-deleteId'), table:button.attr('data-deleteTable')}, function (data){
 				if(data.result=="error"){
 					button.parent().prev().append('<div class="alert alert-box">'+data.message+'</div>');
 				}else if(data.result=='success'){
