@@ -101,7 +101,7 @@ class TuzobusApp
 		$sql = "SHOW TABLES LIKE 'ads'";
 		$chk = $this->db->query($sql);
 		if($chk->num_rows == 0){
-			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` datetime NOT NULL, `end_date` datetime NOT NULL, `publish` tinyint(1) NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
+			$sql = "CREATE TABLE IF NOT EXISTS `ads` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `title` tinytext NOT NULL, `image` tinytext NOT NULL, `href` tinytext NOT NULL, `begin_date` date NOT NULL, `end_date` date NOT NULL, `publish` tinyint(1) NOT NULL, `create_date` datetime NOT NULL, `create_by` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on UPDATE CURRENT_TIMESTAMP, `modify_by` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=1";
 			if($this->db->query($sql) === TRUE) $this->messages[] = 'Se creó la tabla de Anuncios';
 		}
 

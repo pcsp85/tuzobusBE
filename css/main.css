@@ -84,7 +84,8 @@ a.nounderline
 
 #select_image{
     text-align: center;
-    padding: 4em 0;
+    padding: 1em;
+    min-height: 6em;
 }
 #select_image.hover{
     background: #dddddd;
