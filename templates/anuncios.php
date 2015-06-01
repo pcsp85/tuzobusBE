@@ -12,30 +12,41 @@
 <div id="CU_form" class="modal hide fade">
 	<div class="modal-header">
 		<button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3><span></span> anuncio</h3>
+		<h3><i class="icon-picture"></i> <span></span> anuncio</h3>
 	</div>
 	<form name="ads_form" class="">
 	<div class="modal-body">
-		<div class="input-prepend">
-			<span class="add-on span2"><i class="icon-large icon-tag"></i></span>
-			<input class="form-control span10" type="text" name="title" placeholder="Titulo" required>
-		</div>
-		<div class="input-prepend">
-			<span class="add-on span2"><i class="icon-large icon-picture"></i></span>
-			<input class="form-control span10" type="text" name="select-image" placeholder="Selecciona o arrastra la imagen" readonly required>
-			<div class="hide"><input type="file" name="image"></div>
-		</div>
-		<div class="input-prepend">
-			<span class="add-on span2"><i class="icon-large icon-flag"></i></span>
-			<input class="form-contol span10" type="text" name="href" placeholder="Link" required>
-		</div>
-		<div class="input-prepend">
-			<span class="add-on span2"><i class="icon-large icon-calendar"></i></span>
-			<input class="form-contol span10" type="date" name="begin_date" placeholder="Vigencia inicia" required>
-		</div>
-		<div class="input-prepend">
-			<span class="add-on span2"><i class="icon-large icon-calendar"></i></span>
-			<input class="form-contol span10" type="date" name="end_date" placeholder="Vigencia termina" required>
+		<div class="">
+			<div class="span8">
+				<div class="input-prepend">
+					<span class="add-on span2"><i class="icon-large icon-tag"></i></span>
+					<input class="form-control span10" type="text" name="title" placeholder="Titulo" required>
+				</div>
+				<div class="input-prepend">
+					<span class="add-on span2"><i class="icon-large icon-flag"></i></span>
+					<input class="form-contol span10" type="text" name="href" placeholder="Link" required>
+				</div>
+				<div class="input-prepend">
+					<span class="add-on span2"><i class="icon-large icon-calendar"></i></span>
+					<input class="form-contol span10" type="date" name="begin_date" placeholder="Vigencia inicia" required>
+				</div>
+				<div class="input-prepend">
+					<span class="add-on span2"><i class="icon-large icon-calendar"></i></span>
+					<input class="form-contol span10" type="date" name="end_date" placeholder="Vigencia termina" required>
+				</div>
+				<div class="btn-group input-prepend" data-toggle="buttons-radio">
+					<span class="add-on">Publicar anuncio</span>
+					<button class="btn publish active" data-pub="Si">Si</button>
+					<button class="btn publish" data-pub="No">No</button>
+					<input type="hidden" name="publish" value="Si">
+				</div>
+			</div>
+			<div class="span4">
+				<input type="file" name="image" style="display:none;">
+				<div id="select_image">
+					Da clic aquí para seleccionar o arrastra la imagen del anuncio
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="modal-footer">

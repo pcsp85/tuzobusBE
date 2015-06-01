@@ -114,10 +114,19 @@ var TB = function (){
 			  }
 				
 			});
+			var pub = f.find('input[name="publish"]').val();
+			f.find('button.publish[data-pub="'+pub+'"]').addClass('active').siblings('button').removeClass('active');
+		});
+		//Boton de publicación
+		$('button.publish').click(function (e){
+			e.preventDefault();
+			$('input[name="publish"]').val($(this).attr('data-pub'));
 		});
 		//Resstabeciendo formulario al ocultar
 		$('#CU_form').on('hidden', function(){
 			$(this).find('form').get(0).reset();
+			$('input[name="publish"]').val('Si');
+			$('button.publish[data-pub="Si"]').addClass('active').siblings('button').removeClass('active');
 		});
 		//Funcion Solicitar confirmacion para elimiar elemento
 		$('a.delete').click(function (e){
@@ -146,13 +155,34 @@ var TB = function (){
 		});
 
 
-		$('input[name="select-image"]').click(function (e){
-			$(this).parent().find('input[type=file]').click();
+		$('#select_image').click(function (e){
+			$('input[type="file"][name="image"]').click();
 		});
-		$('input[type=file]').on('change',function (){
-			$(this).parent().prev().val($(this).val());
+		$('#select_image').on('dragover', function (e){
+			e.stopPropagation();
+			e.preventDefault();
+			$(this).addClass('hover');
+		});
+		$('#select_image').on('dragleave', function (e){
+			e.stopPropagation();
+			e.preventDefault();
+			$(this).removeClass('hover');
+		});
+		document.getElementById('select_image').addEventListener("drop", loadImage, false);
+		
+		$('input[type=file]').on('change',function (e){
+			loadImage(e);
 		});
 
+	};
+	var image = null;
+	var loadImage = function (e){
+		e.stopPropagation();
+		e.preventDefault();
+		$('#select_image').removeClass('hover');
+		//Cargar imagen
+		image = e.target.files || e.dataTransfer.files;
+		console.log(image);
 	};
 
 	return {

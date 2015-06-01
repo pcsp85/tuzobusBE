@@ -72,3 +72,21 @@ a.nounderline
 .loading{
     display: none;
 }
+.response table tbody tr:nth-child(odd){
+    background: #eeeeee;
+}
+.response table tbody tr:hover{
+    background: #c2c2c2;
+}
+.response table td{
+    padding: .2em .35em;
+}
+
+#select_image{
+    text-align: center;
+    padding: 4em 0;
+}
+#select_image.hover{
+    background: #dddddd;
+    border: 2px dashed #cc0000;
+}

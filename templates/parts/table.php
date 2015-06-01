@@ -13,7 +13,7 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 <?php endif;?>
 <div class="response">
 <?php if($TB->treg>0): ?>
-<p>Existen <strong><?=$TB->treg;?></strong> <?=$TB->name;?>, mostrando <strong><?=$TB->rpp;?></strong>, página <strong><?=$TB->npag;?></strong> de <strong><?=$TB->tpag;?></strong></p>
+<p>Resultado de busqueda: <strong><?=$TB->treg;?></strong> <?=$TB->name;?>, mostrando <strong><?=$TB->rpp;?></strong>, página <strong><?=$TB->npag;?></strong> de <strong><?=$TB->tpag;?></strong>.</p>
 <table>
 	<thead>
 		<tr>
