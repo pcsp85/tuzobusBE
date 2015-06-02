@@ -17,6 +17,7 @@
 	<form>
 		<input type="hidden" name="table" value="ads">
 		<input type="hidden" name="action" value="">
+		<input type="hidden" name="id" value="">
 	<div class="modal-body">
 		<div class="span8">
 			<div class="input-prepend">

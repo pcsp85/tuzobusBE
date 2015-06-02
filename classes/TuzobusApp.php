@@ -260,6 +260,30 @@ class TuzobusApp
 		return $result;
 	}
 
+	public function createItem($p){
+		$respone = array(
+			'result' => 'error',
+			'message' => 'acceso negado'
+			);
+		if($this->login->isUserLoggedin()){
+
+		}
+
+		return $respone;
+	}
+
+	public function updateItem($p){
+		$respone = array(
+			'result' => 'error',
+			'message' => 'acceso negado'
+			);
+		if($this->login->isUserLoggedin()){
+
+		}
+
+		return $respone;
+	}
+
 	public function deleteItem($table, $id){
 		if($this->login->isUserLoggedin()){
 			$sql = "DELETE FROM `$table` WHERE `id` = $id LIMIT 1";

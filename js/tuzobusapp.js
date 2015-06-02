@@ -144,11 +144,12 @@ var TB = function (){
 
 			if(err==''){
 				data = new FormData();
-				$(this).find('input').each(function (i,e){
+				$(this).find('input:not([type=file])').each(function (i,e){
 					data.append($(e).attr('name'), $(e).val());
 				});
-				data.append('format','html');
-				if(image!=null) data.append('image', image[0]);
+				if(image!=null && image!=undefined) data.append('image', image[0]);
+				var button = $(this).find('button.btn-primary');
+				button.attr('disabled', true).before('<img src="'+var_root+'img/ajax-loader.gif"> ');
 				$.ajax({
 					url: var_root+'ajax.php',
 					data: data,
@@ -157,11 +158,20 @@ var TB = function (){
 					processData: false,
 					type: 'POST',
 					success: function (data){
-						res.append(data);
+						data = JSON.parse(data);
+						if(data.result=="success"){
+							res.append('<div class="span12 alert alert-success response">'+data.message+'</div>');
+							setTimeout(function (){
+								$('#CU_form').modal('hide');
+							}, 1500);
+						}else if(data.result=='error'){
+							res.append('<div class="span12 alert alert-box response">'+data.message+'</div>');
+						}
+						button.attr('disabled', false).prev('img').detach();
 					}
 				});
 			}else{
-				res.append('<div class="span12 alert alert-box response"><ul>'+err+'</ul></div>');
+				res.append('<div class="span11 alert alert-box response"><ul>'+err+'</ul></div>');
 			}
 		});
 		//Funcion Solicitar confirmacion para elimiar elemento

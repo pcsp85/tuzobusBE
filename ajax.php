@@ -61,6 +61,14 @@ switch ($action) {
 		$response = $TB->renderPartial('parts/table', false, $TB->invitations($params));
 		break;
 
+	case 'createItem':
+		$response = $TB->createItem($_POST);
+		break;
+
+	case 'updateItem':
+		$response = $TB->updateItem($_POST);
+		break;
+
 	case 'deleteItem':
 		$response = $TB->deleteItem($table,$id);
 		break;
