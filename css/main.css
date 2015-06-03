@@ -72,6 +72,9 @@ a.nounderline
 .loading{
     display: none;
 }
+.anuncios{
+    overflow-x: auto; 
+}
 .response table tbody tr:nth-child(odd){
     background: #eeeeee;
 }
@@ -81,7 +84,13 @@ a.nounderline
 .response table td{
     padding: .2em .35em;
 }
-
+.response table tbody td[data-col="image"] img{
+    position: fixed;
+    display: none;
+}
+.response table tbody td[data-col="image"]:hover img{
+    display: block;
+}
 #select_image{
     text-align: center;
     padding: 1em;

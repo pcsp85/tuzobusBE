@@ -112,7 +112,7 @@ var TB = function (){
 			$(row).each(function (i,el){
 			  var col = $(el).attr('data-col');
 			  if(col=='image'){
-			  	$('#select_image').html($(el).find('img'));
+			  	$('#select_image').html($(el).find('img').clone());
 			  }else{
 			  	f.find('input[name="'+col+'"]').val($(el).text());
 			  }
@@ -134,7 +134,7 @@ var TB = function (){
 			$('#select_image').html('Da clic aquí para seleccionar o arrastra la imagen del anuncio').removeClass('alert').removeClass('alert-success').removeClass('alert-box');
 			$(this).find('.modal-body .alert.response').detach();
 		});
-		//Función VAlidacion y envio de datos para guardar elementos
+		//Función Validacion y envio de datos para guardar elementos
 		$('#CU_form form').submit(function (e){
 			e.preventDefault();
 			res = $(this).find('.modal-body');
@@ -163,6 +163,7 @@ var TB = function (){
 							res.append('<div class="span12 alert alert-success response">'+data.message+'</div>');
 							setTimeout(function (){
 								$('#CU_form').modal('hide');
+								location.reload(true);
 							}, 1500);
 						}else if(data.result=='error'){
 							res.append('<div class="span12 alert alert-box response">'+data.message+'</div>');

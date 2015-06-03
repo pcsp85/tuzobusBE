@@ -62,11 +62,11 @@ switch ($action) {
 		break;
 
 	case 'createItem':
-		$response = $TB->createItem($_POST);
+		$response = $TB->createItem();
 		break;
 
 	case 'updateItem':
-		$response = $TB->updateItem($_POST);
+		$response = $TB->updateItem();
 		break;
 
 	case 'deleteItem':

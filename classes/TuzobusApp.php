@@ -223,7 +223,7 @@ class TuzobusApp
 					if($k=='create_by' || $k=='modify_by'){
 						$data[$n][$k] = $this->get_userdata($v)->name;
 					}elseif($k=='image'){
-						$data[$n][$k] = '<img src="'.$v.'" style="position:fixed; display:none;" onmouseout="$(this).hide()""><span onmouseover="$(this).prev().show()">'.$v.'</span>';
+						$data[$n][$k] = '<img src="'.$v.'"><span>'.$v.'</span>';
 					}elseif($k=='publish'){
 						$data[$n][$k] = $v==1 ? 'Si' : 'No';
 					}else{
@@ -260,28 +260,116 @@ class TuzobusApp
 		return $result;
 	}
 
-	public function createItem($p){
-		$respone = array(
-			'result' => 'error',
-			'message' => 'acceso negado'
-			);
+	public function createItem(){		
 		if($this->login->isUserLoggedin()){
+			if($_POST['action']!='createItem') $this->errors[] = 'Funcion erronea';
+			if(!isset($_POST['table']) || $_POST['table'] == '') $this->errors[] = 'Parametros incorrectos';
+			if(!isset($_POST['title']) || $_POST['title'] == '') $this->errors[] = 'El campo de título es obligatorio';
+			if(!isset($_POST['href']) || $_POST['href'] == '') $this->errors[] = 'El campo de link es obligatorio';
+			if(!isset($_POST['begin_date']) || $_POST['begin_date'] == '') $this->errors[] = 'Falta la fecha de inicio de vigencia';
+			if(!isset($_POST['end_date']) || $_POST['end_date'] == '') $this->errors[] = 'Falta la fecha de fin de vigencia';
+			if(!isset($_POST['publish']) || $_POST['publish'] == '') $this->errors[] = 'Debes indicar si el anuncio se publicará';
+			if(count($this->errors)==0){
+				$columns=''; $values='';
+				foreach($_POST as $k => $v) if($k!='table' && $k!='id' && $k!='action'){
+					$columns .= "`$k`,";
+					if($k=='publish'){
+						$values .= $v == 'Si' ? "1," : "0,";
+					}else{
+						$values .= "'".$this->db->real_escape_string($v)."',";
+					}
+				}
+				$columns .= " `create_date`, `create_by`, `modify_by`";
+				$values .= " NOW(), $_SESSION[user_id], $_SESSION[user_id]";
+				$sql = "INSERT INTO `$_POST[table]` ($columns) VALUES ($values)";
+				if($this->db->query($sql) === TRUE){
+					$ads_id = $this->db->insert_id;
+					if(isset($_FILES['image']['tmp_name'])){
+						$ext = substr($_FILES['image']['name'],strrpos($_FILES['image']['name'], '.'));
+						$image = $this->path . 'img/ads/' . $ads_id . $ext;
+						$image_uri = 'http://' . $_SERVER['HTTP_HOST'] . $this->root . 'img/ads/' . $ads_id . $ext;
+						move_uploaded_file($_FILES['image']['tmp_name'], $image);
+						$sql = "UPDATE `$_POST[table]` SET `image` = '$image_uri' WHERE `id` = $ads_id";
+						$this->db->query($sql);
+					}
+					$response = array(
+						'result' => 'success',
+						'message' => 'El elemento fue creado con éxito'
+						);
+				}else $this->errors[] = 'Error al guardar el elemento, intentalo de nuevo.'.$sql;
+			}
+			
+		}else $this->errors[] = 'Acceso negado';
 
-		}
+		if(count($this->errors)>0) $response = array(
+												'result' => 'error',
+												'message' => $this->toList($this->errors) 
+												);
 
-		return $respone;
+		return $response;
 	}
 
-	public function updateItem($p){
-		$respone = array(
-			'result' => 'error',
-			'message' => 'acceso negado'
-			);
+	public function updateItem(){
 		if($this->login->isUserLoggedin()){
+			if($_POST['action']!='updateItem') $this->errors[] = 'Función erronea';
+			if(!isset($_POST['table']) || $_POST['table'] == '') $this->errors[] = 'Parametros incorrectos';
+			if(!isset($_POST['id']) || $_POST['id'] == '') $this->errors[] = 'Falta la referencia del anuncio';
+			if(!isset($_POST['title']) || $_POST['title'] == '') $this->errors[] = 'El campo de título es obligatorio';
+			if(!isset($_POST['href']) || $_POST['href'] == '') $this->errors[] = 'El campo de link es obligatorio';
+			if(!isset($_POST['begin_date']) || $_POST['begin_date'] == '') $this->errors[] = 'Falta la fecha de inicio de vigencia';
+			if(!isset($_POST['end_date']) || $_POST['end_date'] == '') $this->errors[] = 'Falta la fecha de fin de vigencia';
+			if(!isset($_POST['publish']) || $_POST['publish'] == '') $this->errors[] = 'Debes indicar si el anuncio se publicará';
+			if(count($this->errors)==0){
+				$sql = "SELECT * FROM `$_POST[table]` WHERE `id` = $_POST[id]";
+				$chk = $this->db->query($sql);
+				if($chk->num_rows==1){
+					$ad = $chk->fetch_assoc();
+					$image = $this->path . 'img/ads/' . substr($ad['image'], strrpos($ad['image'], '/'));
+					if(isset($_FILES['image']['tmp_name'])){
+						if(is_file($image)) unlink($image);
+						$ext = substr($_FILES['image']['name'],strrpos($_FILES['image']['name'], '.'));
+						$image = $this->path . 'img/ads/' . $p['id'] . $ext;
+						$image_uri = 'http://' . $_SERVER['HTTP_HOST'] . $this->root . 'img/ads/' . $p['id'] . $ext;
+						move_uploaded_file($_FILES['image']['tmp_name'], $image);
+						$sql = "UPDATE `$p[table]` SET `image` = '$image_uri' WHERE `id` = $p[id]";
+						$this->db->query($sql);
+					}
+					$update = '';
+					foreach ($_POST as $k => $v) if($k!='table' && $k!='id' && $k!='action'){
+						if($ad[$k]!=$v){
+							$update .= "`$k` = '";
+							if($k=='publish') $update .= $v == 'Si' ? "1" : "0";
+							else $update .= $this->db->real_escape_string($v); 
+							$update .= "', ";
+						}
+					}
+					if($update!=''){
+						$update .= " `modify_by` = $_SESSION[user_id] ";
+						$sql = "UPDATE `$_POST[table]` SET $update WHERE `id` = $_POST[id]";
+					}
+					$response = array(
+						'result' => 'success',
+						'message' => 'El elemento se actualizo con éxito.'
+						);
+				}else $this->errors[] = 'No se encontró el anuncio.';
+			}
+		}else $this->errors[] = 'Acceso negado';
 
+		if(count($this->errors)>0) $response = array(
+												'result' => 'error',
+												'message' => $this->toList($this->errors) 
+												);
+
+		return $response;
+	}
+
+	private function toList($array){
+		$ret = '<ul>';
+		foreach($array as $k => $v){
+			$ret .= '<li>' . $v . '</li>';
 		}
-
-		return $respone;
+		$ret .= '</ul>';
+		return $ret;
 	}
 
 	public function deleteItem($table, $id){
@@ -295,7 +383,7 @@ class TuzobusApp
 			}else{
 				$response = array(
 					'result' => 'error',
-					'message' => 'Ocurrio un error al procesar la solicitud, intentalño de nuevo ' . $sql
+					'message' => 'Ocurrio un error al procesar la solicitud, intentalo de nuevo ' . $sql
 					);
 			}
 		}else{
@@ -311,7 +399,9 @@ class TuzobusApp
 		if($id==0){
 			$result = (object) array('name' => 'Sistema');
 		}else{
-
+			$sql = "SELECT name FROM `users` WHERE `id` = $id";
+			$res = $this->db->query($sql);
+			$result = $res->fetch_object();
 		}
 		return $result;
 	}
