@@ -85,7 +85,7 @@ a.nounderline
     padding: .2em .35em;
 }
 .response table tbody td[data-col="image"] img{
-    position: fixed;
+    position: absolute;
     display: none;
 }
 .response table tbody td[data-col="image"]:hover img{

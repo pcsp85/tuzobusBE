@@ -161,7 +161,7 @@ class TuzobusApp
 		$tpag = ceil($treg/$rpp);
 		$npag = isset($_GET['npag']) ? $_GET['npag'] : 1;
 		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
-		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
+		$data_q = $this->db->query($sql . "ORDER BY `id` LIMIT $inicio, $rpp");
 		$data = array();
 		if($data_q->num_rows>0){
 			$n = 0;
@@ -213,7 +213,7 @@ class TuzobusApp
 		$tpag = ceil($treg/$rpp);
 		$npag = isset($_GET['npag']) ? $_GET['npag'] : 1;
 		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
-		$data_q = $this->db->query($sql . "LIMIT $inicio, $rpp");
+		$data_q = $this->db->query($sql . "ORDER BY `id` LIMIT $inicio, $rpp");
 		$data = array();
 		if($data_q->num_rows>0){
 			$n = 0;
@@ -292,10 +292,6 @@ class TuzobusApp
 						$sql = "UPDATE `$_POST[table]` SET `image` = '$image_uri' WHERE `id` = $ads_id";
 						$this->db->query($sql);
 					}
-					$response = array(
-						'result' => 'success',
-						'message' => 'El elemento fue creado con éxito'
-						);
 				}else $this->errors[] = 'Error al guardar el elemento, intentalo de nuevo.'.$sql;
 			}
 			
@@ -305,6 +301,10 @@ class TuzobusApp
 												'result' => 'error',
 												'message' => $this->toList($this->errors) 
 												);
+		else $response = array(
+							'result' => 'success',
+							'message' => 'El elemento fue creado con éxito'
+							);
 
 		return $response;
 	}
@@ -328,11 +328,11 @@ class TuzobusApp
 					if(isset($_FILES['image']['tmp_name'])){
 						if(is_file($image)) unlink($image);
 						$ext = substr($_FILES['image']['name'],strrpos($_FILES['image']['name'], '.'));
-						$image = $this->path . 'img/ads/' . $p['id'] . $ext;
-						$image_uri = 'http://' . $_SERVER['HTTP_HOST'] . $this->root . 'img/ads/' . $p['id'] . $ext;
+						$image = $this->path . 'img/ads/' . $_POST['id'] . $ext;
+						$image_uri = 'http://' . $_SERVER['HTTP_HOST'] . $this->root . 'img/ads/' . $_POST['id'] . $ext;
 						move_uploaded_file($_FILES['image']['tmp_name'], $image);
-						$sql = "UPDATE `$p[table]` SET `image` = '$image_uri' WHERE `id` = $p[id]";
-						$this->db->query($sql);
+						$sql = "UPDATE `$_POST[table]` SET `image` = '$image_uri' WHERE `id` = $_POST[id]";
+						if($this->db->query($sql)!==TRUE) $this->errors[] ='Error al actualizar la imagen';
 					}
 					$update = '';
 					foreach ($_POST as $k => $v) if($k!='table' && $k!='id' && $k!='action'){
@@ -346,11 +346,9 @@ class TuzobusApp
 					if($update!=''){
 						$update .= " `modify_by` = $_SESSION[user_id] ";
 						$sql = "UPDATE `$_POST[table]` SET $update WHERE `id` = $_POST[id]";
+						if($this->db->query($sql)!==TRUE) $this->errors[] = 'Error al actualizar la información';
 					}
-					$response = array(
-						'result' => 'success',
-						'message' => 'El elemento se actualizo con éxito.'
-						);
+
 				}else $this->errors[] = 'No se encontró el anuncio.';
 			}
 		}else $this->errors[] = 'Acceso negado';
@@ -359,6 +357,10 @@ class TuzobusApp
 												'result' => 'error',
 												'message' => $this->toList($this->errors) 
 												);
+		else $response = array(
+							'result' => 'success',
+							'message' => 'El elemento se actualizo con éxito.'
+							);
 
 		return $response;
 	}
@@ -393,6 +395,22 @@ class TuzobusApp
 				);
 		}
 		return $response;	
+	}
+
+	public function getItem($table, $id){
+		if($this->login->isUserLoggedin()){
+			$sql = "SELECT * FROM `$table` WHERE `id`= $id";
+			$data = $this->db->query($sql);
+			if($data->num_rows==1){
+				$response = $data->fetch_object();
+			}else $this->errors[] = 'Elemento no encontrado';
+		}else $this->errors[] = 'Acceso negado';
+
+		if(count($this->errors)>0){
+			$response = '<p>Error(es): </p>'.$this->toList($this->errors);
+		}
+
+		return $response;
 	}
 
 	public function get_userdata($id){

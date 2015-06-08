@@ -4,9 +4,38 @@
 	<div class="anuncios">
 		<?php $TB->renderPartial('parts/table', true, $TB->ads());?> 
 	</div>
-<?php elseif(is_numeric($TB->params[1])): ?>
-	vista de anuncio
-<?php elseif($TB->params[1]=='estadisticas'): ?>
+<?php elseif(is_numeric($TB->params[1])): $ad = $TB->getItem('ads',$TB->params[1]);
+if(is_object($ad)):?>
+
+<div class="row-fluid">
+	<div class="span6 left">
+		<h3>Información</h3>
+		<table>
+			<tr><th>Título</th><td><?=$ad->title;?></td></tr>
+			<tr><th>Imagen</th><td><?=$ad->image;?></td></tr>
+			<tr><th>Destino</th><td><?=$ad->href;?></td></tr>
+			<tr><th>Vigencia inicia</th><td><?=$ad->begin_date;?></td></tr>
+			<tr><th>Vigencia termina</th><td><?=$ad->end_date;?></td></tr>
+			<tr><th>Vigencia termina</th><td><?=$ad->end_date;?></td></tr>
+			<tr><th>Publicado</th><td><?=$ad->publish==1? 'Si': 'No';?></td></tr>
+		</table>
+	</div>
+	<div class="span6 pull-left">
+		<h3>Vista previa</h3>
+		<div class="ads_view">
+			<div class="span12">
+				<h1>Recomendacion para ti</h1>
+				<div class="span 12">
+					<?=$ad->title;?>
+					<img src="<?=$ad->image;?>">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php else: echo $ad;
+	 endif;
+elseif($TB->params[1]=='estadisticas'): ?>
 
 <?php endif; ?>
 <div id="CU_form" class="modal hide fade">

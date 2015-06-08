@@ -192,6 +192,10 @@ var TB = function (){
 					button.parent().prev().append('<div class="alert alert-box">'+data.message+'</div>');
 				}else if(data.result=='success'){
 					button.parent().prev().append('<div class="alert alert-success">'+data.message+'</div>');
+					setTimeout(function(){
+						$('#delete').modal('hide');
+						location.reload(true);
+					},1500);
 				} 
 				button.attr('disabled',false).prev('img').detach();
 			});
