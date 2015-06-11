@@ -22,6 +22,14 @@ switch ($action) {
 		$response = $V->activate_App($code, $device, $conection);
 		break;
 
+	case 'get_horarios':
+		$response = array(
+			'lv'	=> $V->get_option('horario_lv'),
+			'sd'	=> $V->get_option('horario_sd'),
+			'fes'	=> $V->get_option('horario_fes')
+			);
+		break;
+
 	case 'get_ads':
 		$response = $V->get_ads();
 		break;

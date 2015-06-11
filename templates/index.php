@@ -62,8 +62,29 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 		<a href="<?=$TB->root;?>usuarios" class="btn btn-primary pull-right">Administrar usuarios</a>
 	</div>
 </div>
-<div class="row-fluid stores">
-	<div class="span6 well">
+<div class="row-fluid">
+	<div class="span4 well horarios">
+		<form>
+			<fieldset>
+				<legend> Horarios</legend>
+				<div class="input-prepend">
+					<span class="add-on span5"><i class="icon-large icon-time"> Lunes a Viernes</i></span>
+					<input class="span5" name="horario_lv" value="<?=$TB->get_option('horario_lv');?>">
+				</div>
+				<div class="input-prepend">
+					<span class="add-on span5"><i class="icon-large icon-time"> Sábados y Domingos</i></span>
+					<input class="span5" name="horario_sd" value="<?=$TB->get_option('horario_sd');?>">
+				</div>
+				<div class="input-prepend">
+					<span class="add-on span5"><i class="icon-large icon-time"> Días festivos</i></span>
+					<input class="span5" name="horario_fes" value="<?=$TB->get_option('horario_fes');?>">
+				</div>
+				<button class="btn btn-primary pull-right">Guardar</button>
+				<img src="img/ajax-loader.gif" class="loading pull-right">
+			</fieldset>
+		</form>
+	</div>
+	<div class="span4 well stores">
 		<form>
 			<fieldset>
 				<legend><img src="img/google_play_icon.png"> Android</legend>
@@ -81,7 +102,7 @@ if(!defined('TuzobusApp')) die('Acceso negado'); ?>
 			</fieldset>
 		</form>
 	</div>
-	<div class="span6 well">
+	<div class="span4 well stores">
 		<form>
 			<fieldset>
 				<legend><img src="img/apple.png"> IOS</legend>

@@ -66,6 +66,26 @@ var TB = function (){
 			});
 		});
 
+		$('.horarios form').submit(function (e){
+			e.preventDefault();
+			f= $(this);
+			f.find('.alert-box').detach();
+			if(!f.find('input[name="horario_lv"]').val() || !f.find('input[name="horario_sd"]').val() || !f.find('input[name="horario_fes"]').val()){
+				f.find('legend').after('<div class="alert alert-box">No hay datos para guardar</div>');
+			}else{
+				f.find('.loading').show();
+				var args = f.serializeArray();
+				args[args.length] = {name:'action', value:'save_horarios'};
+				$.getJSON(var_root+'ajax.php', args, function (data){
+					if(data.result=='success'){
+						f.find('legend').after('<div class="alert alert-success alert-box">'+data.message+'</div>');
+					}else{
+						f.find('legend').after('<div class="alert alert-box">'+data.message+'</div>');
+					}
+					f.find('.loading').hide();
+				});
+			}		});
+
 		$('.stores form').submit(function (e){
 			e.preventDefault();
 			f = $(this);

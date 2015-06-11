@@ -46,6 +46,24 @@ switch ($action) {
 		}
 		break;
 
+	case 'save_horarios':
+		$err = '';
+		if($TB->update_option('horario_lv',$horario_lv) == false) $err .= 'Error al guardar';
+		if($TB->update_option('horario_sd',$horario_sd) == false) $err .= 'Error al guardar';
+		if($TB->update_option('horario_fes',$horario_fes) == false) $err .= 'Error al guardar';
+		if($err==''){
+			$response = array(
+				'result' => 'success',
+				'message' => 'La información se guardo con éxito'
+				);
+		}else{
+			$response = array(
+				'result' => 'error',
+				'message' => 'Error al guardar, intentalo de nuevo'
+				);
+		}
+		break;
+
 	case 'get_dates':
 		$response = array(
 			'begin_date'	=> $TB->get_option('begin_date'),
