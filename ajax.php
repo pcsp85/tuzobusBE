@@ -1,4 +1,4 @@
-<?php
+<?php error_reporting(0);
 require_once('classes/TuzobusApp.php');
 
 $TB = new TuzobusApp();

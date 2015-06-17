@@ -260,6 +260,53 @@ class TuzobusApp
 		return $result;
 	}
 
+	public function users(){
+		$sql = "SELECT `id`,`user_name`,`user_email`, `name` FROM `users` ";
+		if(isset($_GET['search']) && $_GET['search']!=''){
+			$search = $this->db->real_escape_string($_GET['search']);
+			$sql .= "WHERE `code` LIKE ('%$search%') ";
+		}
+		$rpp = isset($_GET['rpp']) ? $_GET['rpp'] : 25;
+		$treg = $this->db->query($sql)->num_rows;
+		$tpag = ceil($treg/$rpp);
+		$npag = isset($_GET['npag']) ? $_GET['npag'] : 1;
+		$inicio = $npag == 1 ? 0 : ($npag-1)*$rpp;
+		$data_q = $this->db->query($sql . "ORDER BY `id` LIMIT $inicio, $rpp");
+		$data = array();
+		if($data_q->num_rows>0){
+			$n = 0;
+			while($row = $data_q->fetch_object()){
+				//$data[] = $row;
+				foreach($row as $k => $v){
+					if($k=='create_by' || $k=='modify_by'){
+						$data[$n][$k] = $this->get_userdata($v)->name;
+					}else{
+						$data[$n][$k] = $v;
+					}
+
+				}$n++;
+			}
+		}
+
+		$result = (object) array(
+			'name'		=> 'usuarios',
+			'treg'		=> $treg,
+			'rpp'		=> $rpp,
+			'tpag'		=> $tpag,
+			'npag'		=> $npag,
+			'data'		=> $data,
+			'columns'	=> array(
+				'ID',
+				'Usuario',
+				'E-mail',
+				'Nombre'
+				),
+			'root' => $this->root,
+			'sql' => $sql
+			);
+		return $result;
+	}
+
 	public function createItem(){		
 		if($this->login->isUserLoggedin()){
 			if($_POST['action']!='createItem') $this->errors[] = 'Funcion erronea';

@@ -197,7 +197,7 @@ var TB = function (){
 		});
 		//Funcion Solicitar confirmacion para elimiar elemento
 		$('a.delete').click(function (e){
-			var id = $(this).parent().siblings('td[data-col="id"]').html(), title = $(this).parent().siblings('td[data-col="title"]').html() || $(this).parent().siblings('td[data-col="code"]').html();
+			var id = $(this).parent().siblings('td[data-col="id"]').html(), title = $(this).parent().siblings('td[data-col="title"]').html() || $(this).parent().siblings('td[data-col="code"]').html() || $(this).parent().siblings('td[data-col="user_name"]').html() ;
 			$('#delete .modal-body p strong').html(title);
 			$('#delete .deleteConfirmation').attr('data-deleteId', id);
 		});
@@ -238,7 +238,7 @@ var TB = function (){
 			e.preventDefault();
 			$(this).removeClass('hover');
 		});
-		document.getElementById('select_image').addEventListener("drop", loadImage, false);
+		if($('#select_image').length>0) document.getElementById('select_image').addEventListener("drop", loadImage, false);
 		
 		$('input[type=file]').on('change',function (e){
 			loadImage(e);
